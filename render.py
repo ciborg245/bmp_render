@@ -1,4 +1,4 @@
-from math import trunc
+from math import trunc, floor
 from bitmap import Bitmap, color
 
 class Render(object):
@@ -26,8 +26,8 @@ class Render(object):
     def glViewPort(self, x, y, width, height):
         self.view['x'] = x
         self.view['y'] = y
-        self.view['width'] = width-1
-        self.view['height'] = height-1
+        self.view['width'] = width - 1
+        self.view['height'] = height - 1
 
     def glClear(self):
         self.bmp.clear()
@@ -38,13 +38,15 @@ class Render(object):
                 self.bmp.point(i, j, color(trunc(r * 255), trunc(g * 255), trunc(b * 255)))
 
     def glVertex(self, x, y):
-        self.x = trunc(self.view['x'] + (self.view['height'] / 2) * (x + 1))
-        self.y = trunc(self.view['y'] + (self.view['width'] / 2) * (y + 1))
+        self.x = trunc(self.view['x'] + (self.view['width'] / 2) * (x + 1))
+        self.y = trunc(self.view['y'] + (self.view['height'] / 2) * (y + 1))
 
-        self.bmp.point(self.x, self.y, self.color)
+        # print(self.x)
+        # print(self.y)
+        self.bmp.point(self.y, self.x, self.color)
 
     def glColor(self, r, g, b):
-        self.color = color(trunc(r * 255), trunc(g * 255), trunc(b * 255))
+        self.color = color(floor(r * 255), floor(g * 255), floor(b * 255))
         # self.bmp.point(self.x, self.y, color(trunc(r * 255), trunc(g * 255), trunc(b * 255)))
 
     def glFinish(self, name = 'out'):

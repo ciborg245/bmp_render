@@ -42,7 +42,7 @@ class Bitmap(object):
         f.write(word(1))
         f.write(word(24))
         f.write(dword(0))
-        f.write(dword(0))
+        # f.write(dword(0))
         f.write(dword(self.width * self.height * 3))
         f.write(dword(0))
         f.write(dword(0))
