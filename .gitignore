@@ -1,3 +1,10 @@
+#Output txt
+output.txt
+out.txt
+
+#BMP files
+*.bmp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

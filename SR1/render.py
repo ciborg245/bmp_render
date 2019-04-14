@@ -43,6 +43,7 @@ class Render(object):
 
         # print(self.x)
         # print(self.y)
+
         self.bmp.point(self.y, self.x, self.color)
 
     def glColor(self, r, g, b):
@@ -51,3 +52,16 @@ class Render(object):
 
     def glFinish(self, name = 'out'):
         self.bmp.write(name+'.bmp')
+
+    def display(self, name = 'out'):
+        self.glFinish(name)
+
+        try:
+            from wand.image import Image
+            from wand.display import display
+
+            with Image(filename = name + '.bmp') as image:
+                display(image)
+        except Exception as e:
+            print(e)
+            pass  # do nothing if no wand is installed
