@@ -1,1 +1,3 @@
-# bmp_render
+## Software Renderer for educational purposes
+
+Written on python

@@ -11,10 +11,10 @@ try:
     res = int(input())
     if res == 1:
         ren.loadObj('./models/bears.obj', 9, 2, 40)
-        ren.glFinish('out')
+        ren.display('out')
     elif res == 2:
         ren.loadObj('./models/face.obj', translateX=25, translateY=8,scale=15)
-        ren.glFinish('out')
+        ren.display('out')
     else:
         print('Opcion invalida.')
 except e:
