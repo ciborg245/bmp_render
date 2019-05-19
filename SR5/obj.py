@@ -2,6 +2,7 @@ def processObj(file):
     vertices = []
     faces = []
     normals = []
+    textures = []
 
     cont = 0
     for line in file:
@@ -13,5 +14,7 @@ def processObj(file):
             faces.append([list(map(int, f.split('/'))) for f in lineArr[1:]])
         elif lineArr[0] == 'vn':
             normals.append(list(map(float, lineArr[1:])))
+        elif lineArr[0] == 'vt':
+            textures.append(list(map(float, lineArr[1:])))
 
-    return faces, vertices
+    return faces, vertices, textures

@@ -7,6 +7,7 @@ out.txt
 
 #BMP files
 *.bmp
+!model.bmp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

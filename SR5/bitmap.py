@@ -18,6 +18,7 @@ class Bitmap(object):
         self.width = width
         self.height = height
         self.pixels = []
+        self.zbuffer = []
         self.clear()
 
     def clear(self):

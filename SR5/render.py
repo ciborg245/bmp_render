@@ -119,6 +119,12 @@ class Render(object):
     def glVertexC(self, x, y):
         self.bmp.point(y, x, self.color)
 
+    def glColorC(self, r, g, b):
+        self.color = color(r, g, b)
+
+    def glColorFull(self, color):
+        self.color = color
+
     def glColor(self, r, g, b):
         self.color = color(floor(r * 255), floor(g * 255), floor(b * 255))
 
@@ -173,16 +179,19 @@ class Render(object):
                     py += 2 * (dx - dy)
 
 
-    def loadObj(self, filename, translateX=0, translateY=0, scale=1, triangle=0):
+    def loadObj(self, filename, translateX=0, translateY=0, scale=1, texture=None, light = [0, 0, 1]):
         with open(filename) as file:
-            faces, vertices = obj.processObj(file)
+            faces, vertices, textures_coor = obj.processObj(file)
 
-        light = [0.2, 0.3, 0.5]
+        # light = [0.3, 0.1, 0.6]
+        # light = [0, 0, 1]
 
         for face in faces:
 
+            #Se obtienen las coordenadas de los vertices
             faceLen = len(face)
             faceVer = []
+            faceTex = []
             for i in range(faceLen):
                 faceVer.append(transform_vertex(
                     vertices[face[i][0] - 1],
@@ -190,18 +199,29 @@ class Render(object):
                     translateY=translateY,
                     scale=scale
                 ))
+                faceTex.append(textures_coor[face[i][1] - 1])
 
+            #Se obtiene la intensidad
+            dot = cross_product(vector_subs(faceVer[1], faceVer[0]), vector_subs(faceVer[2], faceVer[0]))
+            norm = normalize(dot)
+            light_int = dot_product(norm, light)
+
+            #Se recorren todos los vertices de cada cara
             loopLen = faceLen - 2
             for i in range(loopLen):
-                dot = cross_product(vector_subs(faceVer[i+1], faceVer[0]), vector_subs(faceVer[i+2], faceVer[0]))
-
-                norm = normalize(dot)
-
-                light_int = dot_product(norm, light)
 
                 if light_int > 0:
-                    self.glColor(light_int, light_int, light_int)
-                    self.barycentric_triangle(faceVer[0], faceVer[i+1], faceVer[i+2])
+                    if not texture:
+                        self.glColor(light_int, light_int, light_int)
+
+                    self.barycentric_triangle(
+                        faceVer[0],
+                        faceVer[i+1],
+                        faceVer[i+2],
+                        tex_coor=(faceTex[0], faceTex[i+1], faceTex[i+2]),
+                        texture=texture,
+                        intensity=light_int
+                    )
 
     def display(self, name = 'out'):
         self.glFinish(name)
@@ -214,32 +234,10 @@ class Render(object):
                 display(image)
         except Exception as e:
             print(e)
-            pass  # do nothing if no wand is installed
+            pass
 
 
-    # def line_sweeping_triangle(self, A, B, C):
-    #     if (A[1] > B[1]):
-    #         A, B = B, A
-    #     if (B[1] > C[1]):
-    #         B, C = C, B
-    #     if (A[1] > B[1]):
-    #         A, B = B, A
-    #
-    #     self.glLineC(A[0], A[1], B[0], B[1])
-    #     self.glLineC(A[0], A[1], C[0], C[1])
-    #     self.glLineC(B[0], B[1], C[0], C[1])
-    #
-    #     for i in range(A[1], B[1]):
-    #         x0 = round(x(A, C, i))
-    #         x1 = round(x(A, B, i))
-    #         self.glLineC(x0, i, x1, i)
-    #
-    #     for i in range(B[1], C[1]):
-    #         x0 = round(x(A, C, i))
-    #         x1 = round(x(B, C, i))
-    #         self.glLineC(x0, i, x1, i)
-
-    def barycentric_triangle(self, A, B, C):
+    def barycentric_triangle(self, A, B, C, tex_coor=(), texture=None, intensity=1):
         x_min, x_max, y_min, y_max = bounding_box(A, B, C)
 
         for i in range(x_min, x_max + 1):
@@ -247,6 +245,14 @@ class Render(object):
                 u, v, w = barycentric2(A, B, C, [i, j])
 
                 if u >= 0 and v >= 0 and w >= 0:
+
+                    if texture:
+                        tex_A, tex_B, tex_C = tex_coor
+                        tex_x = tex_A[0] * u + tex_B[0] * v + tex_C[0] * w
+                        tex_y = tex_A[1] * u + tex_B[1] * v + tex_C[1] * w
+
+                        self.glColorFull(texture.getColor(tex_x, tex_y, intensity))
+
                     P_z = dot_product([u, v, w], [A[2], B[2], C[2]])
 
                     if self.bmp.getZbuffer(i, j) < P_z:
