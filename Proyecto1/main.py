@@ -5,7 +5,7 @@ ren = Render()
 ren.glCreateWindow(600, 800)
 
 
-## Ping pong table
+# Ping pong table
 tex = Texture('./models/pingpongtable.bmp')
 ren.lookAt(
     cameraPos= [4, 5, 1],
@@ -34,6 +34,22 @@ ren.loadObj(
     translate=[0, 0, 0],
     scale=[0.3, 0.3, 0.3],
     rotate=[0, 0, 0],
+    texture=tex,
+    light=[0.5, 0.3, 0.8]
+)
+
+## Ping pong paddle 1
+tex = Texture('./models/paddle.bmp')
+ren.lookAt(
+    cameraPos= [-1, -3, 6],
+    cameraTarget= [0.55, -0.18, 0],
+    up= [0, 1, 5]
+)
+ren.loadObj(
+    filename='./models/paddle.obj',
+    translate=[0, 0, 0],
+    scale=[0.01, 0.01, 0.01],
+    rotate=[-1, 0, 0],
     texture=tex,
     light=[0.5, 0.3, 0.8]
 )
