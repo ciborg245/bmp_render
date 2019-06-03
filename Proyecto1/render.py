@@ -2,6 +2,7 @@ from math import trunc, ceil, floor, cos, sin
 from bitmap import Bitmap, color
 import obj as obj
 import random as ran
+import numpy
 
 x = lambda v0, v1, y: v0[0] - ((v0[1]-y)*(v0[0]-v1[0])/(v0[1]-v1[1]))
 
@@ -230,7 +231,8 @@ class Render(object):
         asdf = 0
         for face in faces:
             asdf += 1
-            print(asdf)
+            # print(asdf)
+
             #Se obtienen las coordenadas de los vertices
             faceLen = len(face)
             faceVer = []
@@ -277,7 +279,7 @@ class Render(object):
         res = [
             [self.width / 2,            0,                          0,      x + self.width/2],
             [0,                         self.height / 2,            0,      y + self.height/2],
-            [0,                         0,                          100,    100],
+            [0,                         0,                          128,    128],
             [0,                         0,                          0,      1]
         ]
 
@@ -352,6 +354,7 @@ class Render(object):
             [1]
         ]
 
+        # homog_mat = self.viewport_matrix @ self.proj_matrix @ self.view_matrix @ self.model_matrix @ vertex
         homog_mat = matmul(matmul(matmul(matmul(self.viewport_matrix, self.proj_matrix), self.view_matrix), self.model_matrix), vertex)
 
         trans_vertex = [

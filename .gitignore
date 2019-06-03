@@ -8,6 +8,8 @@ out.txt
 #BMP files
 *.bmp
 !model.bmp
+!pingpongtable.bmp
+!Skin_Patrick.bmp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
