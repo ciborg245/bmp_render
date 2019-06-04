@@ -1,5 +1,7 @@
 import struct
 import math
+import numpy as np
+from PIL import Image
 
 def char(c):
     return struct.pack("=c", c.encode('ascii'))
@@ -22,10 +24,14 @@ class Bitmap(object):
         self.clear()
 
     def clear(self):
+        file = Image.open("models/beach.bmp")
+        bg = np.array(file)
+
         self.pixels = [
-            [color(10, 10, 10) for x in range(self.width)]
+            [color(bg[-y-100][x][0], bg[-y-100][x][1], bg[-y-100][x][2]) for x in range(self.width)]
             for y in range (self.height)
         ]
+
         self.zbuffer = [
             [-math.inf for x in range(self.width)]
             for y in range (self.height)
